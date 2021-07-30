@@ -1,0 +1,23 @@
+<package format="2">
+  <name>laser_segmentation</name>
+  <description>Segment objects by width in laser range data</description>
+  <version>0.0.1</version>
+  <license>BSD</license>
+  <maintainer email="razlaw@ais.uni-bonn.de">Jan Razlaw</maintainer>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>roscpp</depend>
+  <depend>rospy</depend>
+  <depend>std_msgs</depend>
+  <depend>pcl_ros</depend>
+  <depend>nodelet</depend>
+  <depend>tf</depend>
+  <depend>eigen_conversions</depend>
+  <depend>tf_conversions</depend>
+  <depend>laser_geometry</depend>
+  <depend>sensor_msgs</depend>
+
+  <export>
+    <nodelet plugin="${prefix}/nodelet_plugins.xml" />
+  </export>
+</package>

@@ -1,0 +1,87 @@
+<!-- -*- mode: XML -*- -->
+<!-- run laser_segmentation/LaserSegmenterNodelet in a nodelet manager -->
+
+<launch>
+    <arg name="start_as_nodelet" default="true" />
+
+    <arg name="manager" default="velodyne_nodelet_manager" />
+    <arg name="input_topic" default="/velodyne_points" />
+    <arg name="input_is_velodyne" default="true" />
+    <arg name="circular_buffer_capacity" default="6000" />
+    <arg name="angle_between_scanpoints" default="0.2" />
+
+    <arg name="certainty_threshold" default="0.0" />
+    <arg name="dist_weight" default="0.75" />
+    <arg name="intensity_weight" default="0.25" />
+    <arg name="min_object_width" default="0.2" />
+    <arg name="max_object_width" default="1.2" />
+
+    <arg name="delta_min" default="0.15" />
+    <arg name="delta_low" default="0.45" />
+    <arg name="delta_high" default="7.0" />
+    <arg name="delta_max" default="10.0" />
+
+    <!--This default corresponds to an object that would span half a scan ring, which is just an upper bound.-->
+    <arg name="max_kernel_size" default="$(eval 180.0 / arg('angle_between_scanpoints'))" />
+    <arg name="use_all_neighbors_for_median" default="false" />
+    <arg name="self_filter_radius" default="0.0" />
+    <arg name="publish_debug_cloud" default="false" />
+    <arg name="measure_time" default="false" />
+
+    <arg name="output_topic" default="/laser_segments4mapping" />
+
+    <node unless="$(arg start_as_nodelet)" launch-prefix="" pkg="laser_segmentation" type="laser_segmentation_node" name="laser_segmentation"
+          output="screen" >
+        <param name="input_topic" value="$(arg input_topic)"/>
+        <param name="input_is_velodyne" value="$(arg input_is_velodyne)"/>
+        <param name="angle_between_scanpoints" value="$(arg angle_between_scanpoints)"/>
+        <param name="circular_buffer_capacity" value="$(arg circular_buffer_capacity)"/>
+
+        <param name="certainty_threshold" value="$(arg certainty_threshold)"/>
+        <param name="dist_weight" value="$(arg dist_weight)"/>
+        <param name="intensity_weight" value="$(arg intensity_weight)"/>
+        <param name="min_object_width" value="$(arg min_object_width)"/>
+        <param name="max_object_width" value="$(arg max_object_width)"/>
+
+        <param name="delta_min" value="$(arg delta_min)"/>
+        <param name="delta_low" value="$(arg delta_low)"/>
+        <param name="delta_high" value="$(arg delta_high)"/>
+        <param name="delta_max" value="$(arg delta_max)"/>
+
+        <param name="max_kernel_size" value="$(arg max_kernel_size)"/>
+        <param name="use_all_neighbors_for_median" value="$(arg use_all_neighbors_for_median)"/>
+        <param name="self_filter_radius" value="$(arg self_filter_radius)"/>
+        <param name="publish_debug_cloud" value="$(arg publish_debug_cloud)"/>
+        <param name="measure_time" value="$(arg measure_time)"/>
+
+	    <remap from="/laser_segments4mapping" to="$(arg output_topic)" />
+    </node>
+
+    <node if="$(arg start_as_nodelet)" pkg="nodelet" type="nodelet" name="laser_segmentation_nodelet"
+          args="load laser_segmentation/laser_segmentation_nodelet $(arg manager)" output="screen" >
+        <param name="input_topic" value="$(arg input_topic)"/>
+        <param name="input_is_velodyne" value="$(arg input_is_velodyne)"/>
+        <param name="angle_between_scanpoints" value="$(arg angle_between_scanpoints)"/>
+        <param name="circular_buffer_capacity" value="$(arg circular_buffer_capacity)"/>
+
+        <param name="certainty_threshold" value="$(arg certainty_threshold)"/>
+        <param name="dist_weight" value="$(arg dist_weight)"/>
+        <param name="intensity_weight" value="$(arg intensity_weight)"/>
+        <param name="min_object_width" value="$(arg min_object_width)"/>
+        <param name="max_object_width" value="$(arg max_object_width)"/>
+
+        <param name="delta_min" value="$(arg delta_min)"/>
+        <param name="delta_low" value="$(arg delta_low)"/>
+        <param name="delta_high" value="$(arg delta_high)"/>
+        <param name="delta_max" value="$(arg delta_max)"/>
+
+        <param name="max_kernel_size" value="$(arg max_kernel_size)"/>
+        <param name="use_all_neighbors_for_median" value="$(arg use_all_neighbors_for_median)"/>
+        <param name="self_filter_radius" value="$(arg self_filter_radius)"/>
+        <param name="publish_debug_cloud" value="$(arg publish_debug_cloud)"/>
+        <param name="measure_time" value="$(arg measure_time)"/>
+
+	    <remap from="/laser_segments4mapping" to="$(arg output_topic)" />
+    </node>
+
+</launch>
