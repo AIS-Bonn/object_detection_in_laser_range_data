@@ -1,0 +1,91 @@
+<!--  -->
+<launch>
+
+  <arg name="use_multi_hypothesis_tracker" default="false"/>
+  
+  <!-- ========= Bagplayer ========== -->
+  <arg name="use_bag" default="true"/>
+  <arg name="bagname" default="/home/razlaw/bags/simulated_humans_scanned_by_moving_velodyne_puck.bag"/>
+  <arg name="rate" default="1"/>
+  <arg name="start" default="0"/>
+
+  <node if="$(arg use_bag)" pkg="rosbag" type="play" name="play" 
+        args="--clock -q -r $(arg rate) -s $(arg start) $(arg bagname)" output="screen" respawn="false" >
+  </node>
+
+  <param if="$(arg use_bag)" name="/use_sim_time" value="true" />
+
+  <!-- ============= Rviz =============  -->
+  <node name="rivz" pkg="rviz" type="rviz" args="-d $(find object_detection)/launch/visualize_on_simulated_data.rviz"/>
+
+  <!-- ============= Nodelet Manager =============  -->
+  <node pkg="nodelet" type="nodelet" name="velodyne_nodelet_manager"
+        args="manager" output="screen" />
+               
+  <!-- ============= Object Segmentation =============  -->
+  <arg name="segmentation_min_object_width" default="0.03769345"/>
+  <arg name="segmentation_max_object_width" default="1.11903015"/>
+  <arg name="delta_min" default="0.14790699"/>
+  <arg name="delta_low" default="0.53320896"/>
+  
+  <include file="$(find laser_segmentation)/launch/segmentation.launch">
+    <arg name="start_as_nodelet" value="false"/>
+    <arg name="manager" value="velodyne_nodelet_manager" />
+
+    <arg name="certainty_threshold" value="0.8" />
+    <arg name="dist_weight" value="1" />
+    <arg name="intensity_weight" value="0" />
+    <arg name="min_object_width" value="$(arg segmentation_min_object_width)" />
+    <arg name="max_object_width" value="$(arg segmentation_max_object_width)" />
+
+    <arg name="delta_min" value="$(arg delta_min)" />
+    <arg name="delta_low" value="$(arg delta_low)" />
+    <arg name="delta_high" value="90.5" />
+    <arg name="delta_max" value="100.0" />
+
+    <arg name="use_all_neighbors_for_median" value="true" />
+  </include>
+    
+  <!-- ============= Object Detection ============= -->
+  <arg name="min_cluster_size" default="1.00000000"/>
+  <arg name="region_growing_radius" default="8.00000000"/>
+  <arg name="region_growing_distance_threshold" default="2.85381166"/>
+  <arg name="amplify_threshold" default="0.86827688"/>
+  <arg name="min_object_height" default="0.01009602"/>
+  <arg name="max_object_height" default="2.20185094"/>
+  <arg name="detection_max_object_width" default="2.85228200"/>
+  
+  <include file="$(find object_detection)/launch/object_detection.launch">
+    <arg name="start_as_nodelet" value="false"/>
+
+    <arg name="fixed_frame" value="world"/>
+
+    <arg name="min_cluster_size" value="$(arg min_cluster_size)" />
+
+    <arg name="region_growing_radius" value="$(arg region_growing_radius)" />
+    <arg name="region_growing_distance_threshold" value="$(arg region_growing_distance_threshold)" />
+
+    <arg name="amplify_threshold" value="$(arg amplify_threshold)" />
+    <arg name="min_object_height" value="$(arg min_object_height)" />
+    <arg name="max_object_height" value="$(arg max_object_height)" />
+    <arg name="max_object_width" value="$(arg detection_max_object_width)" />
+  </include>
+
+  <!-- ============= Object Tracking ============= -->
+  <arg name="use_bhattacharyya_instead_of_euclidean_distance_for_assignments" default="true"/>
+  <arg name="distance_threshold_for_hypotheses_merge" default="1.14148241"/>
+  <arg name="maximally_allowed_hypothesis_covariance" default="1.59382109"/>
+  <arg name="max_correspondence_distance_for_assignments" default="5.91322573"/>
+  <arg name="kalman_process_noise_covariance_per_second" default="1.53671839"/>
+  
+  <include if="$(arg use_multi_hypothesis_tracker)" file="$(find multi_hypothesis_tracking)/launch/multi_hypothesis_tracking.launch">
+    <arg name="world_frame_id" value="world" />
+    
+    <arg name="use_bhattacharyya_instead_of_euclidean_distance_for_assignments" value="$(arg use_bhattacharyya_instead_of_euclidean_distance_for_assignments)" />
+    <arg name="distance_threshold_for_hypotheses_merge" value="$(arg distance_threshold_for_hypotheses_merge)" />
+    <arg name="maximally_allowed_hypothesis_covariance" value="$(arg maximally_allowed_hypothesis_covariance)" />
+    <arg name="max_correspondence_distance_for_assignments" value="$(arg max_correspondence_distance_for_assignments)" />
+    <arg name="kalman_process_noise_covariance_per_second" value="$(arg kalman_process_noise_covariance_per_second)" />
+  </include>
+  
+</launch>

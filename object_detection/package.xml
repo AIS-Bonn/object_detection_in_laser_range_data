@@ -1,0 +1,23 @@
+<package format="2">
+	<name>object_detection</name>
+	<description>Detect potential objects in point clouds</description>
+	<version>0.0.1</version>
+	<license>BSD</license>
+
+	<maintainer email="razlaw@ais.uni-bonn.de">Jan Razlaw</maintainer>
+
+	<buildtool_depend>catkin</buildtool_depend>
+	<depend>laser_segmentation</depend>
+	<depend>pcl_ros</depend>
+	<depend>nodelet</depend>
+	<depend>multi_hypothesis_tracking_msgs</depend>
+	<depend>geometry_msgs</depend>
+	<depend>visualization_msgs</depend>
+	<depend>pcl_conversions</depend>
+	<depend>tf_conversions</depend>
+	<depend>eigen_conversions</depend>
+
+	<export>
+		<nodelet plugin="${prefix}/nodelet_plugins.xml" />
+	</export>
+</package>

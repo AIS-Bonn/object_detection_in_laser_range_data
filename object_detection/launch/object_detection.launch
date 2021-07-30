@@ -1,0 +1,80 @@
+<!-- -*- mode: XML -*- -->
+<!-- run object_detection/ObjectDetectionNodelet in a nodelet manager -->
+
+<launch>
+    <arg name="manager" default="velodyne_nodelet_manager" />
+    <arg name="start_as_nodelet" default="true" />
+
+    <arg name="segments_topic" default="/laser_segments4detection" />
+    <arg name="tracks_topic" default="/hypotheses_full" />
+    <arg name="fixed_frame" default="world" />
+    <arg name="sensor_frame" default="velodyne" />
+
+    <arg name="certainty_thresh" default="0.5" />
+
+    <arg name="cluster_tolerance" default="1.0" />
+    <arg name="min_cluster_size" default="5" />
+    <arg name="max_cluster_size" default="25000" />
+
+    <arg name="region_growing_radius" default="2" />
+    <arg name="region_growing_distance_threshold" default="0.4" />
+
+    <arg name="amplify_threshold" default="0.0" />
+    <arg name="min_object_height" default="0.5" />
+    <arg name="max_object_height" default="2.5" />
+    <arg name="max_object_width" default="1.5" />
+    <arg name="max_object_altitude" default="9.9" />
+
+    <arg name="measure_time" default="false" />
+
+    <node unless="$(arg start_as_nodelet)" launch-prefix="" pkg="object_detection" type="object_detection_node" name="object_detection"
+          output="screen" >
+        <param name="segments_topic" value="$(arg segments_topic)"/>
+        <param name="tracks_topic" value="$(arg tracks_topic)"/>
+        <param name="fixed_frame" value="$(arg fixed_frame)"/>
+        <param name="sensor_frame" value="$(arg sensor_frame)"/>
+
+        <param name="certainty_thresh" value="$(arg certainty_thresh)"/>
+
+        <param name="cluster_tolerance" value="$(arg cluster_tolerance)"/>
+        <param name="min_cluster_size" value="$(arg min_cluster_size)"/>
+        <param name="max_cluster_size" value="$(arg max_cluster_size)"/>
+
+        <param name="region_growing_radius" value="$(arg region_growing_radius)"/>
+        <param name="region_growing_distance_threshold" value="$(arg region_growing_distance_threshold)"/>
+
+        <param name="amplify_threshold" value="$(arg amplify_threshold)"/>
+        <param name="min_object_height" value="$(arg min_object_height)"/>
+        <param name="max_object_height" value="$(arg max_object_height)"/>
+        <param name="max_object_width" value="$(arg max_object_width)"/>
+        <param name="max_object_altitude" value="$(arg max_object_altitude)"/>
+
+        <param name="measure_time" value="$(arg measure_time)"/>
+    </node>
+
+    <node if="$(arg start_as_nodelet)" pkg="nodelet" type="nodelet" name="object_detection_nodelet"
+          args="load object_detection/object_detection_nodelet $(arg manager)" output="screen" >
+        <param name="segments_topic" value="$(arg segments_topic)"/>
+        <param name="tracks_topic" value="$(arg tracks_topic)"/>
+        <param name="fixed_frame" value="$(arg fixed_frame)"/>
+        <param name="sensor_frame" value="$(arg sensor_frame)"/>
+
+        <param name="certainty_thresh" value="$(arg certainty_thresh)"/>
+
+        <param name="cluster_tolerance" value="$(arg cluster_tolerance)"/>
+        <param name="min_cluster_size" value="$(arg min_cluster_size)"/>
+        <param name="max_cluster_size" value="$(arg max_cluster_size)"/>
+
+        <param name="region_growing_radius" value="$(arg region_growing_radius)"/>
+        <param name="region_growing_distance_threshold" value="$(arg region_growing_distance_threshold)"/>
+
+        <param name="amplify_threshold" value="$(arg amplify_threshold)"/>
+        <param name="min_object_height" value="$(arg min_object_height)"/>
+        <param name="max_object_height" value="$(arg max_object_height)"/>
+        <param name="max_object_width" value="$(arg max_object_width)"/>
+        <param name="max_object_altitude" value="$(arg max_object_altitude)"/>
+
+        <param name="measure_time" value="$(arg measure_time)"/>
+    </node>
+
+</launch>
