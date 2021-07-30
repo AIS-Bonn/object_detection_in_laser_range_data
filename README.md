@@ -40,10 +40,10 @@ To see a demo:
 The bag file contains simulated data from a moving Velodyne Puck.  
 The simulated environment is populated with 50 simulated humans moving with random speeds to random points on a plane.  
 
-The packages are part of a pipeline to segment, detect, and track multiple objects.
+The packages are part of a pipeline to segment, detect, and track multiple objects.  
 To see the full demo:
-- also clone and build the [multi_hypothesis_tracking](https://github.com/AIS-Bonn/multi_hypothesis_tracking) package.  
-- set the _use_multi_hypothesis_tracker_ parameter at the top of [visualize_on_simulated_data.launch](/object_detection/launch/visualize_on_simulated_data.launch) to true
+- also clone and build the [multi_hypothesis_tracking](https://github.com/AIS-Bonn/multi_hypothesis_tracking) package,
+- and set the _use_multi_hypothesis_tracker_ parameter at the top of [visualize_on_simulated_data.launch](/object_detection/launch/visualize_on_simulated_data.launch) to true.
 
 # Citation
 
